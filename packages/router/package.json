@@ -1,6 +1,6 @@
 {
     "name": "@sigx/router",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "description": "Router for SignalX with SSR support and hooks",
     "type": "module",
     "main": "./dist/index.js",
