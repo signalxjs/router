@@ -1,0 +1,57 @@
+{
+    "name": "@sigx/router",
+    "version": "0.4.2",
+    "description": "Router for SignalX with SSR support and hooks",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "vite build && tsgo --emitDeclarationOnly",
+        "dev": "vite build --watch"
+    },
+    "keywords": [
+        "sigx",
+        "router",
+        "routing",
+        "navigation",
+        "ssr"
+    ],
+    "author": "Andreas Ekdahl",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/signalxjs/router.git",
+        "directory": "packages/router"
+    },
+    "homepage": "https://github.com/signalxjs/router",
+    "bugs": {
+        "url": "https://github.com/signalxjs/router/issues"
+    },
+    "peerDependencies": {
+        "sigx": "^0.4.1"
+    },
+    "dependencies": {
+        "@sigx/reactivity": "^0.4.1",
+        "@sigx/runtime-core": "^0.4.1",
+        "@sigx/runtime-dom": "^0.4.1"
+    },
+    "devDependencies": {
+        "@sigx/vite": "^0.4.1",
+        "@types/node": "^20.0.0",
+        "sigx": "^0.4.1",
+        "typescript": "^5.9.3",
+        "vite": "^8.0.3"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}
