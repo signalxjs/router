@@ -30,7 +30,7 @@ interface HistoryEntry {
  * ```
  */
 export function createMemoryHistory(options: MemoryHistoryOptions = {}): RouterHistory {
-    const base = options.base || '';
+    const base = normalizeBase(options.base);
     const initialLocation = options.initialLocation || '/';
     
     const listeners: Set<(to: string, from: string, state: HistoryState | null) => void> = new Set();
@@ -115,7 +115,7 @@ export function createMemoryHistory(options: MemoryHistoryOptions = {}): RouterH
         },
         
         createHref(path: string) {
-            return base + path;
+            return base === '/' ? path : base + path;
         },
         
         destroy() {
@@ -124,4 +124,16 @@ export function createMemoryHistory(options: MemoryHistoryOptions = {}): RouterH
     };
     
     return history;
+}
+
+/**
+ * Normalize the base path: ensure leading slash, drop trailing slash
+ * (except when base is just "/"). Mirrors web history's behavior so
+ * `createHref` produces consistent output across SSR and client.
+ */
+function normalizeBase(base?: string): string {
+    if (!base) return '/';
+    if (!base.startsWith('/')) base = '/' + base;
+    if (base !== '/' && base.endsWith('/')) base = base.slice(0, -1);
+    return base;
 }
