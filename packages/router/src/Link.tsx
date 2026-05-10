@@ -65,7 +65,10 @@ export const Link = component<LinkProps>(({ props, slots, emit }) => {
     
     return () => {
         const resolved = router.resolve(props.to);
-        const href = resolved.fullPath;
+        // Render the href with the history's base prefix so the link still
+        // works before hydration (a click on `/foo` under `base: '/docs/'`
+        // would otherwise 404). createHref is a no-op when base is '/'.
+        const href = router.options.history.createHref(resolved.fullPath);
         
         // Determine active state
         const isExactActive = currentRoute.path === resolved.path;
