@@ -48,5 +48,6 @@
     "homepage": "https://github.com/signalxjs/router",
     "bugs": {
         "url": "https://github.com/signalxjs/router/issues"
-    }
+    },
+    "packageManager": "pnpm@10.28.2"
 }
