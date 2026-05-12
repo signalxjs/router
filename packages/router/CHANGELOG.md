@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.5] - 2026-05-12
+
+### Changed
+
+- Bump `sigx`, `@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, and `@sigx/vite` peer/dependency ranges to `^0.4.3` and rebuild against core `0.4.3`. Picks up the upstream fixes shipped in core `0.4.2` and `0.4.3` (notably the restored `__registerComponentPlugin` re-export from `@sigx/lynx` for HMR). No router API changes.
+
+## [0.4.4] - 2026-05-11
+
+### Fixed
+
+- `RouterLink` now renders `href` with the configured base ([#6](https://github.com/signalxjs/router/pull/6)).
+
 ## [0.4.3] - 2026-05-10
 
 ### Changed

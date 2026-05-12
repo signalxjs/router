@@ -1,6 +1,6 @@
 {
     "name": "@sigx/router",
-    "version": "0.4.4",
+    "version": "0.4.5",
     "description": "Router for SignalX with SSR support and hooks",
     "type": "module",
     "main": "./dist/index.js",
@@ -37,17 +37,17 @@
         "url": "https://github.com/signalxjs/router/issues"
     },
     "peerDependencies": {
-        "sigx": "^0.4.1"
+        "sigx": "^0.4.3"
     },
     "dependencies": {
-        "@sigx/reactivity": "^0.4.1",
-        "@sigx/runtime-core": "^0.4.1",
-        "@sigx/runtime-dom": "^0.4.1"
+        "@sigx/reactivity": "^0.4.3",
+        "@sigx/runtime-core": "^0.4.3",
+        "@sigx/runtime-dom": "^0.4.3"
     },
     "devDependencies": {
-        "@sigx/vite": "^0.4.1",
+        "@sigx/vite": "^0.4.3",
         "@types/node": "^20.0.0",
-        "sigx": "^0.4.1",
+        "sigx": "^0.4.3",
         "typescript": "^5.9.3",
         "vite": "^8.0.3"
     },
