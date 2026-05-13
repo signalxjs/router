@@ -367,7 +367,7 @@ router.removeRoute('new-page');
 
 ## Documentation
 
-Full SignalX documentation: [signalxjs/docs](https://github.com/signalxjs/docs)
+Full SignalX documentation: <https://signalxjs.github.io/>
 
 ## License
 
