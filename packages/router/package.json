@@ -37,7 +37,7 @@
         "url": "https://github.com/signalxjs/router/issues"
     },
     "peerDependencies": {
-        "sigx": "^0.4.3"
+        "sigx": "^0.4.8"
     },
     "dependencies": {
         "@sigx/reactivity": "^0.4.3",
@@ -45,11 +45,11 @@
         "@sigx/runtime-dom": "^0.4.3"
     },
     "devDependencies": {
-        "@sigx/vite": "^0.4.3",
+        "@sigx/vite": "^0.4.8",
         "@types/node": "^20.0.0",
-        "sigx": "^0.4.3",
+        "sigx": "^0.4.8",
         "typescript": "^6.0.3",
-        "vite": "^8.0.3"
+        "vite": "^8.0.13"
     },
     "publishConfig": {
         "access": "public"
