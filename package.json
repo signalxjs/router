@@ -52,7 +52,7 @@
     "type": "git",
     "url": "git+https://github.com/signalxjs/router.git"
   },
-  "homepage": "https://github.com/signalxjs/router",
+  "homepage": "https://sigx.dev/router/",
   "bugs": {
     "url": "https://github.com/signalxjs/router/issues"
   },

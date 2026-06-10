@@ -2,7 +2,7 @@
 
 # @sigx/router
 
-**Type-safe router for [SignalX](https://github.com/signalxjs/core).**
+**Type-safe router for [SignalX](https://sigx.dev/core/).**
 
 [![npm](https://img.shields.io/npm/v/@sigx/router.svg?label=@sigx/router&color=blue)](https://www.npmjs.com/package/@sigx/router)
 [![license](https://img.shields.io/npm/l/@sigx/router.svg)](./LICENSE)
@@ -12,6 +12,10 @@
 </div>
 
 > 🚧 SignalX is in early public release (`0.4.x`). The API surface is small and stabilising — feedback is very welcome.
+
+## 📚 Documentation
+
+Full guides, API reference and live examples → **<https://sigx.dev/router/>**
 
 ## Install
 
@@ -66,14 +70,14 @@ app.mount('#app');
 - **SSR support** — works with `@sigx/server-renderer` for server-rendered apps.
 - **Redirects** — declarative `redirect: '/path'` on routes.
 
-## Companion repos
+## Part of SignalX
 
-- [`signalxjs/core`](https://github.com/signalxjs/core) — `reactivity`, `runtime-core`, `runtime-dom`, `server-renderer`, `vite`, `sigx`
-- [`signalxjs/store`](https://github.com/signalxjs/store) — `@sigx/store`
-- [`signalxjs/ssg`](https://github.com/signalxjs/ssg) — `@sigx/ssg`, `@sigx/ssr-islands`, `@sigx/ssg-theme-daisyui`
-- [`signalxjs/cli`](https://github.com/signalxjs/cli) — `@sigx/cli` (sigx-cli plugin host)
-- [`signalxjs/lynx`](https://github.com/signalxjs/lynx) — Lynx native runtime + modules
-- [Docs site](https://signalxjs.github.io/) — main SignalX documentation
+- [SignalX core](https://sigx.dev/core/) — `reactivity`, `runtime-core`, `runtime-dom`, `server-renderer`, `vite`, `sigx`
+- [`@sigx/store`](https://sigx.dev/store/) — state management
+- [`@sigx/ssg`](https://sigx.dev/ssg/) — static-site generator (`@sigx/ssr-islands`, `@sigx/ssg-theme-daisyui`)
+- [`@sigx/cli`](https://sigx.dev/cli/) — sigx CLI plugin host
+- [Lynx](https://sigx.dev/lynx/) — native runtime + modules
+- [Full documentation](https://sigx.dev/) — all of SignalX
 
 ## Contributing
 
