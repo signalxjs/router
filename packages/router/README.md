@@ -5,7 +5,7 @@
 **Type-safe router for [SignalX](https://sigx.dev/core/) — SSR support, reactive hooks, and a plugin architecture.**
 
 [![npm](https://img.shields.io/npm/v/@sigx/router.svg?label=@sigx/router&color=blue)](https://www.npmjs.com/package/@sigx/router)
-[![license](https://img.shields.io/npm/l/@sigx/router.svg)](./LICENSE)
+[![license](https://img.shields.io/npm/l/@sigx/router.svg)](https://github.com/signalxjs/router/blob/main/LICENSE)
 [![ci](https://github.com/signalxjs/router/actions/workflows/ci.yml/badge.svg)](https://github.com/signalxjs/router/actions/workflows/ci.yml)
 [![types](https://img.shields.io/npm/types/@sigx/router.svg)](https://www.typescriptlang.org/)
 
@@ -77,4 +77,4 @@ pattern matching, scroll restoration, SSR, and the complete API reference.
 
 ## License
 
-[MIT](./LICENSE) © Andreas Ekdahl
+[MIT](https://github.com/signalxjs/router/blob/main/LICENSE) © Andreas Ekdahl
