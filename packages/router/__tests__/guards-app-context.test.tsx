@@ -9,7 +9,7 @@
  * logged-in user back to /login.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { component, jsx, defineApp, defineFactory } from '@sigx/runtime-core';
 import type { App } from 'sigx';
 import { createRouter, createMemoryHistory, RouterView } from '@sigx/router';
@@ -46,7 +46,7 @@ describe('Guards run within the app context (issue #33)', () => {
             guardInstance = useStore();
         });
 
-        const app = defineApp(null as any);
+        const app = defineApp(jsx('div', {}));
         app.use(router);
         await router.isReady();
 
@@ -120,7 +120,7 @@ describe('Guards run within the app context (issue #33)', () => {
             guardInstance = useStore();
         });
 
-        const app = defineApp(null as any);
+        const app = defineApp(jsx('div', {}));
         app.use(router);
         await router.isReady();
 
@@ -148,7 +148,7 @@ describe('Guards run within the app context (issue #33)', () => {
         });
         router.beforeResolve(() => { beforeResolveInstance = useStore(); });
 
-        const app = defineApp(null as any);
+        const app = defineApp(jsx('div', {}));
         app.use(router);
         await router.isReady();
 
@@ -168,7 +168,7 @@ describe('Guards run within the app context (issue #33)', () => {
         let hookInstance: unknown;
         router.afterEach(() => { hookInstance = useStore(); });
 
-        const app = defineApp(null as any);
+        const app = defineApp(jsx('div', {}));
         app.use(router);
         await router.isReady();
 
@@ -190,7 +190,7 @@ describe('Guards run within the app context (issue #33)', () => {
             await new Promise(r => setTimeout(r, 5));
         });
 
-        const app = defineApp(null as any);
+        const app = defineApp(jsx('div', {}));
         app.use(router);
         await router.isReady();
 
@@ -216,7 +216,7 @@ describe('Guards run within the app context (issue #33)', () => {
             instances.push(useStore());
         });
 
-        const app = defineApp(null as any);
+        const app = defineApp(jsx('div', {}));
         app.use(router);
         await router.isReady();
 
