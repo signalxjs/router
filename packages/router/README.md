@@ -31,8 +31,11 @@ npm install @sigx/router sigx
 
 > `@sigx/router` requires `sigx` `0.6.x` as a peer dependency, along with the core
 > packages `@sigx/reactivity`, `@sigx/runtime-core`, and `@sigx/runtime-dom`
-> (`>=0.6.0 <0.7.0`). Installing `sigx` brings them in — npm 7+ and pnpm resolve
-> them automatically and your app keeps a **single** copy of the reactivity engine.
+> (`>=0.6.0 <0.7.0`). Installing `sigx` satisfies them — the core packages are
+> `sigx`'s own dependencies, so they land in your tree either way. (npm 7+ also
+> auto-installs missing peers; pnpm only does so when `auto-install-peers` is
+> enabled — the default since pnpm 8 — and warns otherwise.) Result: a **single**
+> copy of the reactivity engine in your app.
 
 ## Quick start
 
