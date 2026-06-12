@@ -5,6 +5,7 @@
  */
 
 import { signal, defineInjectable } from 'sigx';
+import type { App } from 'sigx';
 import type {
     Router,
     RouterOptions,
@@ -76,6 +77,29 @@ export function createRouter(options: RouterOptions): Router {
     const beforeGuards: NavigationGuard[] = [];
     const beforeResolveGuards: NavigationGuard[] = [];
     const afterHooks: NavigationHookAfter[] = [];
+
+    // The app the router was installed into (app.use(router)). Guards and
+    // afterEach hooks run inside its DI context so factories resolve the same
+    // app-scoped instances components receive (issue #33).
+    let installedApp: App | null = null;
+
+    /**
+     * Invoke fn inside the installed app's DI context when available
+     * (app.runWithContext, @sigx/runtime-core >= 0.6.1); fall back to a
+     * direct call when the router is used standalone or the app predates
+     * runWithContext.
+     *
+     * runWithContext only covers the synchronous portion of fn — for an async
+     * guard, only the part before its first await runs in context, which is
+     * why each guard invocation is wrapped individually rather than the whole
+     * pipeline.
+     */
+    function runInAppContext<T>(fn: () => T): T {
+        if (installedApp && typeof installedApp.runWithContext === 'function') {
+            return installedApp.runWithContext(fn);
+        }
+        return fn();
+    }
     
     // Scroll restoration
     const scrollBehavior = options.scrollBehavior;
@@ -268,7 +292,11 @@ export function createRouter(options: RouterOptions): Router {
         guards: NavigationGuard[]
     ): Promise<boolean | RouteLocation | void> {
         for (const guard of guards) {
-            const result = await guard(to, from);
+            // Each guard is wrapped individually: the app context is only
+            // active for the guard's synchronous portion (up to its first
+            // await), so wrapping the whole chain would leave every guard
+            // after the first async one outside the context.
+            const result = await runInAppContext(() => guard(to, from));
             
             // Guard returned false - abort
             if (result === false) {
@@ -296,9 +324,9 @@ export function createRouter(options: RouterOptions): Router {
         // Update reactive state using $set for proper reactivity triggering
         (currentRouteState as any).$set(to);
         
-        // Run after hooks
+        // Run after hooks (inside the app context, like the before guards)
         for (const hook of afterHooks) {
-            hook(to, from);
+            runInAppContext(() => hook(to, from));
         }
     }
     
@@ -606,6 +634,9 @@ export function createRouter(options: RouterOptions): Router {
         },
         
         install(app) {
+            // Capture the app so navigation guards run inside its DI context
+            installedApp = app;
+
             // Provide router and current route at app level
             app.defineProvide(useRouter, () => router);
             app.defineProvide(useRoute, () => currentRouteState as unknown as RouteLocation);
