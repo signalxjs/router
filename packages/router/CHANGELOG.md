@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-06-12
+
 ### Fixed
 
 - **Navigation guards now run on the initial route resolution** ([#32](https://github.com/signalxjs/router/issues/32)). Previously `beforeEach`, per-route `beforeEnter`, `beforeResolve`, route-record `redirect`s, and `afterEach` only ran for subsequent `navigate()` calls — a direct load or refresh of a guarded URL rendered the protected component without any guard invocation, on both the server (`createMemoryHistory({ initialLocation })`) and the client (`createWebHistory()`). The initial location now goes through the same guard pipeline as every navigation, kicked off by `app.use(router)` (or the first `router.isReady()` call), with `from` set to `null`:
