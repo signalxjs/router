@@ -101,6 +101,42 @@ Back button cannot return to the guarded URL. Returning `false` on the initial
 navigation keeps the initially matched route (there is no previous route to
 stay on) — redirect instead to protect content on direct loads.
 
+### Guards and dependency injection
+
+When the router is installed into an app (`defineApp(...).use(router)`),
+guards and `afterEach` hooks run **inside that app's DI context** (via
+`app.runWithContext`, requires `@sigx/runtime-core` >= 0.6.1). A
+`defineFactory` / `defineInjectable` use-function called from a guard resolves
+the same app-scoped instance that components receive:
+
+```ts
+const useAuthStore = defineFactory(() => createAuthStore(), 'scoped');
+
+router.beforeEach((to) => {
+  // Same store instance the app's components see
+  const auth = useAuthStore();
+  if (to.meta.requiresAuth && !auth.isAuthenticated) return '/login';
+});
+```
+
+**Async guards:** the app context covers only the *synchronous* portion of a
+guard — it does not survive an `await`. Each guard is wrapped individually, so
+resolve your dependencies at the top of the guard, before the first `await`:
+
+```ts
+router.beforeEach(async (to) => {
+  const auth = useAuthStore();        // ✅ before the first await — in context
+  await auth.refreshSession();
+  const other = useOtherStore();      // ❌ after an await — realm fallback
+});
+```
+
+If you must resolve a dependency after an `await`, capture the app and
+re-enter the context explicitly: `app.runWithContext(() => useOtherStore())`.
+
+When the router is used standalone (no app installed), guards are invoked
+directly and DI resolutions fall back to the realm-level instances.
+
 On the server, await `router.isReady()` before rendering and observe an
 initial-load redirect via `currentRoute.redirectedFrom` to emit a real
 HTTP redirect:
