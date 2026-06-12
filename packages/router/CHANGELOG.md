@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-06-12
+
 ### Fixed
 
 - **Navigation guards now run inside the app's DI context** ([#33](https://github.com/signalxjs/router/issues/33)). When the router is installed via `defineApp(...).use(router)`, `beforeEach`, per-route `beforeEnter`, `beforeResolve` guards and `afterEach` hooks are invoked through `app.runWithContext(...)` (`@sigx/runtime-core` >= 0.6.1), so DI factories (`defineFactory` / `defineInjectable` use-functions) called from a guard resolve the **same app-scoped instances components receive** — previously they resolved the realm-fallback instance, e.g. an auth guard reading `isAuthenticated: false` from a second store copy and bouncing a logged-in user back to `/login`. Applies to both the initial route resolution and subsequent navigations. When the router is used standalone (no app) or the installed app predates `runWithContext`, guards are invoked directly as before.
