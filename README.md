@@ -11,7 +11,7 @@
 
 </div>
 
-> 🚧 SignalX is in early public release (`0.4.x`). The API surface is small and stabilising — feedback is very welcome.
+> 🚧 SignalX is in early public release (`0.6.x`). The API surface is small and stabilising — feedback is very welcome.
 
 ## 📚 Documentation
 
@@ -22,6 +22,17 @@ Full guides, API reference and live examples → **<https://sigx.dev/router/>**
 ```bash
 npm install @sigx/router sigx
 ```
+
+> `@sigx/router` declares `sigx` and the core packages (`@sigx/reactivity`,
+> `@sigx/runtime-core`, `@sigx/runtime-dom`) as peer dependencies (`>=0.6.0 <0.7.0`)
+> so your app holds a single copy of the reactivity engine. With a package manager
+> that auto-installs peers (npm 7+, or pnpm with `auto-install-peers` — the pnpm 8+
+> default), the command above is all you need; otherwise add the core packages
+> explicitly:
+>
+> ```bash
+> npm install @sigx/router sigx @sigx/reactivity @sigx/runtime-core @sigx/runtime-dom
+> ```
 
 ## Quick start
 
