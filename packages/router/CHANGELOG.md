@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **Navigation guards now run on the initial route resolution** ([#32](https://github.com/signalxjs/router/issues/32)). Previously `beforeEach`, per-route `beforeEnter`, `beforeResolve`, route-record `redirect`s, and `afterEach` only ran for subsequent `navigate()` calls — a direct load or refresh of a guarded URL rendered the protected component without any guard invocation, on both the server (`createMemoryHistory({ initialLocation })`) and the client (`createWebHistory()`). The initial location now goes through the same guard pipeline as every navigation, kicked off by `app.use(router)` (or the first `router.isReady()` call), with `from` set to `null`:
+  - A guard redirect on initial load lands with **replace** semantics — Back cannot return to the guarded URL — and records the original location in `currentRoute.redirectedFrom`, so SSR servers can `await router.isReady()` and emit a real 30x redirect when `redirectedFrom` is set (or when `currentRoute.fullPath` differs from the requested URL).
+  - Async guards are awaited, exactly as during `navigate()`.
+  - A guard returning `false` on the initial navigation keeps the initially matched route (there is no previous route to stay on) — redirect instead of returning `false` to protect content on direct loads.
+  - `router.isReady()` now resolves once the initial navigation (including guards) has completed, instead of when the router is installed. `afterEach` hooks now also fire for the initial navigation.
+
 ### Changed
 
 - **Breaking (packaging):** `@sigx/reactivity`, `@sigx/runtime-core`, and `@sigx/runtime-dom` are now `peerDependencies` (`>=0.6.0 <0.7.0`) instead of regular `dependencies`, and the `sigx` peer range moved from `^0.4.3` to `>=0.6.0 <0.7.0`. The host application now controls the single core instance — previously the router's own `^0.4.3` dependencies could install a second copy of the reactivity engine next to `sigx@0.6.x` (0.x caret ranges never overlap across minors), making store signals invisible to the renderer and breaking strict `npm install` with `ERESOLVE`. Install core `0.6.x` alongside the router: with a package manager that auto-installs peers (npm 7+, or pnpm with `auto-install-peers` — the pnpm 8+ default), installing `sigx` is enough; otherwise add `@sigx/reactivity`, `@sigx/runtime-core`, and `@sigx/runtime-dom` explicitly. ([#31](https://github.com/signalxjs/router/issues/31))
