@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
-- **Breaking (packaging):** `@sigx/reactivity`, `@sigx/runtime-core`, and `@sigx/runtime-dom` are now `peerDependencies` (`>=0.6.0 <0.7.0`) instead of regular `dependencies`, and the `sigx` peer range moved from `^0.4.3` to `>=0.6.0 <0.7.0`. The host application now controls the single core instance — previously the router's own `^0.4.3` dependencies could install a second copy of the reactivity engine next to `sigx@0.6.x` (0.x caret ranges never overlap across minors), making store signals invisible to the renderer and breaking strict `npm install` with `ERESOLVE`. Install the core packages (or just `sigx`) at `0.6.x` alongside the router. ([#31](https://github.com/signalxjs/router/issues/31))
+- **Breaking (packaging):** `@sigx/reactivity`, `@sigx/runtime-core`, and `@sigx/runtime-dom` are now `peerDependencies` (`>=0.6.0 <0.7.0`) instead of regular `dependencies`, and the `sigx` peer range moved from `^0.4.3` to `>=0.6.0 <0.7.0`. The host application now controls the single core instance — previously the router's own `^0.4.3` dependencies could install a second copy of the reactivity engine next to `sigx@0.6.x` (0.x caret ranges never overlap across minors), making store signals invisible to the renderer and breaking strict `npm install` with `ERESOLVE`. Install core `0.6.x` alongside the router: with a package manager that auto-installs peers (npm 7+, or pnpm with `auto-install-peers` — the pnpm 8+ default), installing `sigx` is enough; otherwise add `@sigx/reactivity`, `@sigx/runtime-core`, and `@sigx/runtime-dom` explicitly. ([#31](https://github.com/signalxjs/router/issues/31))
 
 ## [0.4.5] - 2026-05-12
 
