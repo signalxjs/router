@@ -74,6 +74,52 @@ app.use(router);
 app.mount('#app');
 ```
 
+## Navigation guards
+
+Guards run for **every** route resolution — including the very first one on a
+direct load / refresh (client) or the `initialLocation` on the server. The
+initial guard run is kicked off by `app.use(router)`; `router.isReady()`
+resolves once it has completed.
+
+```ts
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    { path: '/login', name: 'login', component: Login },
+    { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true } },
+  ],
+});
+
+router.beforeEach((to, from) => {
+  // from is null on the initial navigation
+  if (to.meta.requiresAuth && !isAuthenticated()) return '/login';
+});
+```
+
+A guard redirect on the initial navigation uses **replace** semantics, so the
+Back button cannot return to the guarded URL. Returning `false` on the initial
+navigation keeps the initially matched route (there is no previous route to
+stay on) — redirect instead to protect content on direct loads.
+
+On the server, await `router.isReady()` before rendering and observe an
+initial-load redirect via `currentRoute.redirectedFrom` to emit a real
+HTTP redirect:
+
+```ts
+const history = createMemoryHistory({ initialLocation: req.url });
+const router = createRouter({ history, routes });
+router.beforeEach(authGuard);
+app.use(router);
+
+await router.isReady();
+if (router.currentRoute.redirectedFrom) {
+  // the guard redirected the requested URL — don't render, redirect
+  res.redirect(302, router.currentRoute.fullPath);
+} else {
+  res.send(render(app));
+}
+```
+
 See the [full documentation](https://sigx.dev/router/) for history modes, guards, hooks,
 pattern matching, scroll restoration, SSR, and the complete API reference.
 

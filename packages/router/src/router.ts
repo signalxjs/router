@@ -165,10 +165,6 @@ export function createRouter(options: RouterOptions): Router {
         });
     }
     
-    // Ready promise
-    let readyPromise: Promise<void> | null = null;
-    let readyResolve: (() => void) | null = null;
-    
     // Create initial route
     const initialLocation = history.location;
     
@@ -187,6 +183,10 @@ export function createRouter(options: RouterOptions): Router {
     // history.push() triggers the history listener which calls finalizeNavigation,
     // so we skip the listener during navigate() to avoid redundant reactive updates.
     let isNavigating = false;
+
+    // Set once any navigation (navigate() or back/forward) finalizes — the
+    // pending initial guard run must not clobber a navigation that won the race.
+    let hasNavigated = false;
     
     /**
      * Resolve a raw location to a full RouteLocation
@@ -303,15 +303,20 @@ export function createRouter(options: RouterOptions): Router {
     }
     
     /**
-     * Navigate to a location
+     * Run the full guard pipeline for a navigation: route-record redirect,
+     * then beforeEach → per-route beforeEnter → beforeResolve.
+     *
+     * This is the single execution point for navigation guards — both
+     * navigate() and the initial route resolution go through it.
      */
-    async function navigate(
-        to: RouteLocationRaw,
-        replace = false
-    ): Promise<RouteLocation | void> {
-        const from = getCurrentRoute();
-        const resolved = resolve(to);
-        
+    async function runGuardPipeline(
+        resolved: RouteLocation,
+        from: RouteLocation | null
+    ): Promise<
+        | { status: 'ok' }
+        | { status: 'abort' }
+        | { status: 'redirect'; to: RouteLocation }
+    > {
         // Handle redirect - check the DEEPEST matched route (last in array) for redirect
         // Only the actual target route should trigger a redirect, not parent routes
         const matched = resolved.matched[resolved.matched.length - 1];
@@ -321,17 +326,17 @@ export function createRouter(options: RouterOptions): Router {
                 const redirectTo = typeof routeRecord.redirect === 'function'
                     ? routeRecord.redirect(resolved)
                     : routeRecord.redirect;
-                return navigate(redirectTo, replace);
+                return { status: 'redirect', to: resolve(redirectTo) };
             }
         }
-        
+
         // Run before guards
         const beforeResult = await runGuards(resolved, from, beforeGuards);
-        if (beforeResult === false) return;
+        if (beforeResult === false) return { status: 'abort' };
         if (beforeResult && typeof beforeResult === 'object') {
-            return navigate(beforeResult, replace);
+            return { status: 'redirect', to: beforeResult };
         }
-        
+
         // Run route-specific guards
         for (const record of resolved.matched) {
             const routeRecord = compiledRoutes.find(r => r.record.path === record.path)?.record;
@@ -340,22 +345,48 @@ export function createRouter(options: RouterOptions): Router {
                     ? routeRecord.beforeEnter
                     : [routeRecord.beforeEnter];
                 const result = await runGuards(resolved, from, guards);
-                if (result === false) return;
+                if (result === false) return { status: 'abort' };
                 if (result && typeof result === 'object') {
-                    return navigate(result, replace);
+                    return { status: 'redirect', to: result };
                 }
             }
         }
-        
+
         // Run before resolve guards
         const resolveResult = await runGuards(resolved, from, beforeResolveGuards);
-        if (resolveResult === false) return;
+        if (resolveResult === false) return { status: 'abort' };
         if (resolveResult && typeof resolveResult === 'object') {
-            return navigate(resolveResult, replace);
+            return { status: 'redirect', to: resolveResult };
         }
-        
+
+        return { status: 'ok' };
+    }
+
+    /**
+     * Navigate to a location
+     */
+    async function navigate(
+        to: RouteLocationRaw,
+        replace = false,
+        redirectedFrom?: RouteLocation
+    ): Promise<RouteLocation | void> {
+        const from = getCurrentRoute();
+        const resolved = resolve(to);
+
+        const result = await runGuardPipeline(resolved, from);
+        if (result.status === 'abort') return;
+        if (result.status === 'redirect') {
+            // Follow the redirect, remembering the original target
+            return navigate(result.to, replace, redirectedFrom ?? resolved);
+        }
+
+        if (redirectedFrom) {
+            resolved.redirectedFrom = redirectedFrom;
+        }
+
         // Finalize navigation first (updates reactive state)
         isNavigating = true;
+        hasNavigated = true;
         finalizeNavigation(resolved, from);
         
         // Save current scroll position before changing history entry
@@ -384,10 +415,68 @@ export function createRouter(options: RouterOptions): Router {
         const match = matchRoute(to, compiledRoutes);
         const resolved = createRouteLocation(to, match?.route || null, match?.params || {});
         const from = getCurrentRoute();
+        hasNavigated = true;
         finalizeNavigation(resolved, from);
         // Restore saved scroll position for the destination history entry
         handleScroll(resolved, from, getSavedScrollPosition(_state?.position));
     });
+
+    /**
+     * Resolve a location during the initial navigation: run the shared guard
+     * pipeline with `from = null`, following redirects. A redirect uses
+     * replace semantics — Back must not return to the guarded initial URL —
+     * and records the original location in `redirectedFrom` so SSR servers
+     * can observe the redirect (and emit a real 30x response).
+     */
+    async function resolveInitial(
+        resolved: RouteLocation,
+        redirectedFrom: RouteLocation | null
+    ): Promise<void> {
+        const result = await runGuardPipeline(resolved, null);
+
+        // A real navigation finished while guards were running — it wins.
+        if (hasNavigated) return;
+
+        // Aborted (a guard returned false): there is no previous route to stay
+        // on, so the initially matched route remains. Guards that protect
+        // content on direct loads should redirect instead of returning false.
+        if (result.status === 'abort') return;
+
+        if (result.status === 'redirect') {
+            // Snapshot the original location: `initialRoute` doubles as the
+            // reactive state's backing object, which finalizeNavigation
+            // mutates — a live reference would alias the redirect target.
+            return resolveInitial(result.to, redirectedFrom ?? { ...resolved });
+        }
+
+        if (redirectedFrom) {
+            resolved.redirectedFrom = redirectedFrom;
+            isNavigating = true;
+            finalizeNavigation(resolved, null);
+            history.replace(resolved.fullPath);
+            isNavigating = false;
+        } else {
+            // Initial route confirmed — state already holds it; finalize to
+            // run afterEach hooks for the initial navigation.
+            finalizeNavigation(resolved, null);
+        }
+    }
+
+    // Initial navigation: runs the guard pipeline for the location the router
+    // started on. Kicked off by install() (app.use(router)) or isReady(),
+    // whichever comes first.
+    let initialNavigation: Promise<void> | null = null;
+    function runInitialNavigation(): Promise<void> {
+        if (!initialNavigation) {
+            // Defer one microtask so guards registered synchronously after
+            // app.use(router) / isReady() are still picked up.
+            initialNavigation = Promise.resolve().then(() => {
+                if (hasNavigated) return;
+                return resolveInitial(initialRoute, null);
+            });
+        }
+        return initialNavigation;
+    }
     
     const router: Router = {
         get currentRoute() {
@@ -520,20 +609,17 @@ export function createRouter(options: RouterOptions): Router {
             // Provide router and current route at app level
             app.defineProvide(useRouter, () => router);
             app.defineProvide(useRoute, () => currentRouteState as unknown as RouteLocation);
-            
-            // Mark router as ready
-            if (readyResolve) {
-                readyResolve();
-            }
+
+            // Run guards for the initial route. Errors surface through
+            // isReady(); catch here so an uninspected install doesn't cause
+            // an unhandled rejection.
+            runInitialNavigation().catch(err => {
+                console.error('[router] Error during initial navigation:', err);
+            });
         },
-        
+
         isReady() {
-            if (!readyPromise) {
-                readyPromise = new Promise(resolve => {
-                    readyResolve = resolve;
-                });
-            }
-            return readyPromise;
+            return runInitialNavigation();
         }
     };
     
