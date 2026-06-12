@@ -23,6 +23,10 @@ Full guides, API reference and live examples → **<https://sigx.dev/router/>**
 npm install @sigx/router sigx
 ```
 
+> `@sigx/router` declares `sigx` and the core packages (`@sigx/reactivity`,
+> `@sigx/runtime-core`, `@sigx/runtime-dom`) as peer dependencies (`>=0.6.0 <0.7.0`)
+> so your app holds a single copy of the reactivity engine.
+
 ## Quick start
 
 ```tsx
