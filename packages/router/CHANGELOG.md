@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-06-15
+
+### Changed
+
+- **Aligned with SignalX core 0.7.** The core peer ranges (`@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, `sigx`) move from `>=0.6.0 <0.7.0` to `>=0.7.0 <0.8.0`, and the router is rebuilt and validated against core `0.7.0`. The router tracks core's minor, so this is a minor bump. ([#43](https://github.com/signalxjs/router/issues/43))
+  - Core 0.7 removed the deprecated **flat `Define*` type aliases** (e.g. `DefineProp`). The router already uses the namespaced `Define.Prop` / `Define.Event` / `Define.Slot` form, so there is no public API change.
+
+### Fixed
+
+- **`<Link>` / `<RouterLink>` with no children no longer throws** ([#43](https://github.com/signalxjs/router/issues/43)). Core 0.7 (`@sigx/runtime-core` #123) changed slot semantics so a slot accessor is `undefined` when no content is provided; `Link` now calls `slots.default?.()` and renders an empty anchor instead of crashing with `slots.default is not a function`. A childless `<Link to="…" />` (e.g. an icon-only link styled via CSS) is now safe.
+
 ## [0.6.1] - 2026-06-12
 
 ### Fixed
