@@ -278,7 +278,6 @@ describe('Link component edge cases', () => {
         await flushAsync();
 
         const anchor = container.querySelector('a')!;
-        expect(anchor).not.toBeNull();
         expect(anchor.getAttribute('href')).toBe('/about');
         expect(anchor.textContent).toBe('');
     });
