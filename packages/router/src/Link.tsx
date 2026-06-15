@@ -90,7 +90,7 @@ export const Link = component<LinkProps>(({ props, slots, emit }) => {
                 class={classes.length > 0 ? classes.join(' ') : undefined}
                 aria-current={isExactActive ? ariaCurrentValue() : undefined}
             >
-                {slots.default()}
+                {slots.default?.()}
             </a>
         );
     };

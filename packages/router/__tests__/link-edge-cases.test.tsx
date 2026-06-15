@@ -256,6 +256,33 @@ describe('Link component edge cases', () => {
     });
 
     // -----------------------------------------------------------------------
+    // No slot content — slots.default is undefined under @sigx core >= 0.7
+    // (runtime-core #123: slot accessor is undefined when no content provided)
+    // -----------------------------------------------------------------------
+
+    it('should render an empty anchor when given no children', async () => {
+        const router = createTestRouter();
+
+        const App = component(() => {
+            return () => (
+                <div>
+                    <Link to="/about" />
+                    <RouterView />
+                </div>
+            );
+        }, { name: 'App' });
+
+        const app = defineApp(jsx(App, {}));
+        app.use(router);
+        app.mount(container);
+        await flushAsync();
+
+        const anchor = container.querySelector('a')!;
+        expect(anchor.getAttribute('href')).toBe('/about');
+        expect(anchor.textContent).toBe('');
+    });
+
+    // -----------------------------------------------------------------------
     // replace=false should use router.push
     // -----------------------------------------------------------------------
 
