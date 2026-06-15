@@ -47,7 +47,7 @@
         "@sigx/runtime-core": "^0.7.0",
         "@sigx/runtime-dom": "^0.7.0",
         "@sigx/vite": "^0.7.0",
-        "@types/node": "^20.0.0",
+        "@types/node": "^25.9.3",
         "sigx": "^0.7.0",
         "typescript": "^6.0.3",
         "vite": "^8.0.3"
