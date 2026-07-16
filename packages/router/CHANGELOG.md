@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- **Aligned with SignalX core 0.10.** The core peer ranges (`@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, `sigx`) move from `>=0.7.0 <0.8.0` to `>=0.10.0 <0.11.0`, and the router is rebuilt and validated against core `0.10.0`. ([#51](https://github.com/signalxjs/router/issues/51))
+  - **The router no longer mirrors core's minor.** Through 0.7 the two numbers matched (router 0.6 ↔ core 0.6, router 0.7 ↔ core 0.7); core then shipped 0.8, 0.9 and 0.10 with nothing for the router to ship against, so this release is **0.8.0 against core 0.10**. Read the peer range, not the version number, to know which core a given router supports.
+  - **No public API change.** None of core's 0.8/0.9/0.10 breaking removals — `useAsync`, `<Suspense>`, `<ErrorBoundary>`, `throwOnError`, `registerPendingPromise`, `app.config.errorHandler`, and the `@sigx/server-renderer` hook/stream changes — touch anything the router imports. The router's core surface is `signal`, `component`, `defineInjectable`, `defineProvide`, `getCurrentInstance` and the `App` / `Define` / `ComponentFactory` / `Plugin` types, all via the `sigx` barrel, with no `sigx/internals` access.
+  - This unblocks the downstream ecosystem: `@sigx/ssg` and `@sigx/ssg-theme-daisyui` require the router as a non-optional peer, so they could not move to core 0.10 while the router's peer capped it below 0.8.
+- **Bundle-size budget raised 15 KB → 16 KB.** The router's own code is unchanged; core 0.10 adds ~840 B through the surface the router imports (14.62 KB → 15.46 KB brotlied, dependencies included). ([#51](https://github.com/signalxjs/router/issues/51))
+
+### Fixed
+
+- **`<RouterView>` no longer advises `<Suspense>`, which core 0.9 removed.** When a route's `component` is not a valid `ComponentFactory`, the warning suggested wrapping `<RouterView>` in `<Suspense>` to show a loading fallback — impossible on core 0.9+. It now points at `<Defer fallback={…}>`, the tree-positional async wrapper that replaced it. ([#51](https://github.com/signalxjs/router/issues/51))
+
 ## [0.7.0] - 2026-06-15
 
 ### Changed
