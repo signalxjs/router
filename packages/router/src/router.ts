@@ -101,11 +101,15 @@ export function createRouter(options: RouterOptions): Router {
      */
     function runInAppContext<T>(fn: () => T): T {
         if (installedApp && typeof installedApp.runWithContext === 'function') {
-            const runWithContext = installedApp.runWithContext as <R>(
-                fn: () => R,
-                options?: { asyncAdvice?: string | false }
-            ) => R;
-            return runWithContext(fn, {
+            // Method call on the app, not an extracted function — preserves
+            // the receiver for App implementations that rely on `this`.
+            const app = installedApp as App & {
+                runWithContext<R>(
+                    fn: () => R,
+                    options?: { asyncAdvice?: string | false }
+                ): R;
+            };
+            return app.runWithContext(fn, {
                 asyncAdvice:
                     '(from @sigx/router) An async navigation guard keeps the app ' +
                     'context only until its first await — resolve injectables at the ' +
