@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-07-16
+
 ### Changed
 
 - **Aligned with SignalX core 0.10.** The core peer ranges (`@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, `sigx`) move from `>=0.7.0 <0.8.0` to `>=0.10.0 <0.11.0`, and the router is rebuilt and validated against core `0.10.0`. ([#51](https://github.com/signalxjs/router/issues/51))
