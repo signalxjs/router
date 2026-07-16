@@ -246,6 +246,62 @@ describe('Guards run within the app context (issue #33)', () => {
         expect(router.currentRoute.path).toBe('/dashboard');
     });
 
+    it('passes asyncAdvice so core attributes the async-guard warning to the router (core#276)', async () => {
+        const received: unknown[] = [];
+        const mockApp = {
+            defineProvide: vi.fn(),
+            use: vi.fn(),
+            runWithContext: vi.fn(<T,>(fn: () => T, options?: unknown): T => {
+                received.push(options);
+                return fn();
+            }),
+        } as unknown as App;
+
+        const history = createMemoryHistory({ initialLocation: '/' });
+        const router = createRouter({ history, routes });
+        router.beforeEach(async () => {
+            await new Promise(r => setTimeout(r, 0));
+        });
+        router.install(mockApp);
+
+        await router.isReady();
+        await router.push('/dashboard');
+
+        expect(received.length).toBeGreaterThan(0);
+        for (const options of received) {
+            const advice = (options as { asyncAdvice?: string }).asyncAdvice;
+            expect(advice).toContain('@sigx/router');
+            expect(advice).toContain('before awaiting');
+        }
+    });
+
+    it('async guard triggers core\'s dev warning at most once, and navigation still works', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        try {
+            const history = createMemoryHistory({ initialLocation: '/' });
+            const router = createRouter({ history, routes });
+            router.beforeEach(async () => {
+                await new Promise(r => setTimeout(r, 0));
+                return true;
+            });
+
+            const app = defineApp(jsx('div', {}));
+            app.use(router);
+            await router.isReady();
+            await router.push('/dashboard');
+
+            expect(router.currentRoute.path).toBe('/dashboard');
+            // Once per app; the diagnosis sentence is present whether core is
+            // 0.10.0 (generic remedy) or carries asyncAdvice (router-attributed).
+            const contextWarnings = warn.mock.calls.filter(
+                call => typeof call[0] === 'string' && call[0].includes('synchronous portion')
+            );
+            expect(contextWarnings.length).toBe(1);
+        } finally {
+            warn.mockRestore();
+        }
+    });
+
     it('falls back to direct invocation when the app has no runWithContext (older runtime-core)', async () => {
         const history = createMemoryHistory({ initialLocation: '/' });
         const router = createRouter({ history, routes });

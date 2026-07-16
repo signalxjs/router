@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Navigation guards pass core's `asyncAdvice` option through `runWithContext`, so core 0.10's dev-only async-callback warning carries router-specific advice for async guards (resolve injectables at the top of the guard, before the first `await`) instead of naming an API guard authors never call. No-op against core 0.10.0; activates on the next core release (signalxjs/core#276). ([#56](https://github.com/signalxjs/router/issues/56))
+
 ## [0.8.0] - 2026-07-16
 
 ### Changed
