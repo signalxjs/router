@@ -92,11 +92,30 @@ export function createRouter(options: RouterOptions): Router {
      * runWithContext only covers the synchronous portion of fn — for an async
      * guard, only the part before its first await runs in context, which is
      * why each guard invocation is wrapped individually rather than the whole
-     * pipeline.
+     * pipeline. The asyncAdvice option (added in core#292 for the report in
+     * core#276) re-attributes core's dev-only async-callback warning so
+     * guard authors get advice they can act on; cores without the option
+     * ignore the extra argument, so the generic core warning appears
+     * instead. The local widening covers the 0.10.0 type defs — drop it when
+     * the core peer floor carries RunWithContextOptions.
      */
     function runInAppContext<T>(fn: () => T): T {
         if (installedApp && typeof installedApp.runWithContext === 'function') {
-            return installedApp.runWithContext(fn);
+            // Method call on the app, not an extracted function — preserves
+            // the receiver for App implementations that rely on `this`.
+            const app = installedApp as App & {
+                runWithContext<R>(
+                    fn: () => R,
+                    options?: { asyncAdvice?: string | false }
+                ): R;
+            };
+            return app.runWithContext(fn, {
+                asyncAdvice:
+                    '(from @sigx/router) An async navigation guard or afterEach ' +
+                    'hook keeps the app context only until its first await — ' +
+                    'resolve injectables at the top, before awaiting; captured ' +
+                    'values stay valid afterwards.'
+            });
         }
         return fn();
     }

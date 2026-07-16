@@ -4,6 +4,8 @@ All notable changes to `@sigx/router`. The package also keeps a per-package `pac
 
 ## [Unreleased]
 
+- Navigation guards now pass core's `asyncAdvice` option through `runWithContext`, re-attributing core 0.10's dev-only async-callback warning: an async guard gets router-specific advice ("resolve injectables at the top of the guard, before awaiting") instead of remediation aimed at an API the guard author never called. No-op against core 0.10.0 (the extra argument is ignored — the generic core warning appears); activates on the next core release carrying `RunWithContextOptions` (added in signalxjs/core#292 for signalxjs/core#276). ([#56](https://github.com/signalxjs/router/issues/56))
+
 ## 0.8.0 — 2026-07-16
 
 - Aligned with SignalX core 0.10: core peer ranges (`@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, `sigx`) moved to `>=0.10.0 <0.11.0`, rebuilt against core `0.10.0`. **No public API change** — none of core's 0.8/0.9/0.10 removals (`useAsync`, `<Suspense>`, `<ErrorBoundary>`, `throwOnError`, `app.config.errorHandler`, `registerPendingPromise`) are part of the router's surface. Unblocks `@sigx/ssg` and `@sigx/ssg-theme-daisyui`, which could not move to core 0.10 while the router's peer capped it below 0.8. ([#51](https://github.com/signalxjs/router/issues/51))
