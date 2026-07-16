@@ -4,6 +4,10 @@ All notable changes to `@sigx/router`. The package also keeps a per-package `pac
 
 ## [Unreleased]
 
+- Aligned with SignalX core 0.10: core peer ranges (`@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, `sigx`) moved to `>=0.10.0 <0.11.0`, rebuilt against core `0.10.0`. **No public API change** — none of core's 0.8/0.9/0.10 removals (`useAsync`, `<Suspense>`, `<ErrorBoundary>`, `throwOnError`, `app.config.errorHandler`, `registerPendingPromise`) are part of the router's surface. Unblocks `@sigx/ssg` and `@sigx/ssg-theme-daisyui`, which could not move to core 0.10 while the router's peer capped it below 0.8. ([#51](https://github.com/signalxjs/router/issues/51))
+- Fixed: the `<RouterView>` warning for a non-`ComponentFactory` route component no longer advises wrapping in `<Suspense>`, which core 0.9 removed — it now points at `<Defer fallback={…}>`. ([#51](https://github.com/signalxjs/router/issues/51))
+- Bundle-size budget raised 15 KB → 16 KB. The router's own code is unchanged; core 0.10 adds ~840 B through the surface the router imports (14.62 KB → 15.46 KB brotlied, deps included). ([#51](https://github.com/signalxjs/router/issues/51))
+
 ## 0.7.0 — 2026-06-15
 
 - Aligned with SignalX core 0.7: core peer ranges (`@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, `sigx`) moved to `>=0.7.0 <0.8.0`, rebuilt against core `0.7.0`. No public API change (the router already uses the namespaced `Define.*` types core 0.7 keeps). ([#43](https://github.com/signalxjs/router/issues/43))

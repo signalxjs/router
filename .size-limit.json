@@ -2,6 +2,6 @@
   {
     "name": "@sigx/router",
     "path": "packages/router/dist/index.js",
-    "limit": "15 KB"
+    "limit": "16 KB"
   }
 ]

@@ -61,7 +61,7 @@ export const RouterView = component<RouterViewProps>((ctx) => {
         
         // Lazy components created via lazy() are already ComponentFactories
         // (lazy() wraps the loader in a component() call), so they flow
-        // through the normal render path below and work with <Suspense>.
+        // through the normal render path below and work with <Defer>.
         // This branch catches raw functions / invalid values that aren't
         // wrapped with lazy().
         if (!isComponentFactory(Component)) {
@@ -70,7 +70,7 @@ export const RouterView = component<RouterViewProps>((ctx) => {
                 `ComponentFactory. If you are using a dynamic import, wrap it with lazy():\n\n` +
                 `  import { lazy } from 'sigx';\n` +
                 `  const MyPage = lazy(() => import('./MyPage'));\n\n` +
-                `Then use <Suspense> around <RouterView> to show a fallback while loading.`
+                `Then use <Defer fallback={…}> around <RouterView> to show a fallback while loading.`
             );
             return null;
         }
