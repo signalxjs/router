@@ -70,7 +70,7 @@ export const RouterView = component<RouterViewProps>((ctx) => {
                 `ComponentFactory. If you are using a dynamic import, wrap it with lazy():\n\n` +
                 `  import { lazy } from 'sigx';\n` +
                 `  const MyPage = lazy(() => import('./MyPage'));\n\n` +
-                `Then use <Defer fallback={…}> around <RouterView> to show a fallback while loading.`
+                `Then use <Defer fallback={<div>Loading…</div>}> around <RouterView> to show a fallback while loading.`
             );
             return null;
         }

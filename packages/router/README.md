@@ -11,7 +11,7 @@
 
 </div>
 
-> 🚧 SignalX is in early public release (`0.7.x`). The API surface is small and stabilising — feedback is very welcome.
+> 🚧 SignalX is in early public release (`0.10.x`). The API surface is small and stabilising — feedback is very welcome.
 
 `@sigx/router` is the official router for SignalX apps. It brings path-based and named
 routes, nested layouts, navigation guards, reactive hooks (`useRoute`, `useRouter`, …),
@@ -29,9 +29,9 @@ Full guides, API reference and live examples → **<https://sigx.dev/router/>**
 npm install @sigx/router sigx
 ```
 
-> `@sigx/router` requires `sigx` `0.7.x` as a peer dependency, along with the core
+> `@sigx/router` requires `sigx` `0.10.x` as a peer dependency, along with the core
 > packages `@sigx/reactivity`, `@sigx/runtime-core`, and `@sigx/runtime-dom`
-> (`>=0.7.0 <0.8.0`), so your app controls a **single** copy of the reactivity
+> (`>=0.10.0 <0.11.0`), so your app controls a **single** copy of the reactivity
 > engine. With a package manager that auto-installs peers — npm 7+, or pnpm with
 > `auto-install-peers` enabled (the default since pnpm 8) — the command above is
 > all you need. If your setup does not auto-install peers, add the core packages
