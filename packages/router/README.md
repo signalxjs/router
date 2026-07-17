@@ -11,7 +11,7 @@
 
 </div>
 
-> 🚧 SignalX is in early public release (`0.10.x`). The API surface is small and stabilising — feedback is very welcome.
+> 🚧 SignalX is in early public release (`0.12.x`). The API surface is small and stabilising — feedback is very welcome.
 
 `@sigx/router` is the official router for SignalX apps. It brings path-based and named
 routes, nested layouts, navigation guards, reactive hooks (`useRoute`, `useRouter`, …),
