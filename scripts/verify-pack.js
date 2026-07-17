@@ -124,6 +124,9 @@ function main() {
     // @sigx/router declares `sigx` as a peer dep — satisfy it from npm using the
     // range from the PUBLISHED manifest (catalog: already rewritten to ^0.12.0).
     const router = packed.find((p) => p.name === '@sigx/router');
+    if (!router) {
+        throw new Error("Expected '@sigx/router' among the packed packages, but it was not found");
+    }
     deps['sigx'] = router.publishedManifest.peerDependencies.sigx;
     const appPkg = {
         name: 'sigx-router-pack-smoke',
