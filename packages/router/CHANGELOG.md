@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- The literal root route `'/'` now outranks wildcard catch-alls (`'/*rest'`)
+  and optional-param routes for the URL `/` — it previously scored zero
+  (no segments) and lost to any one-segment pattern, so apps with a
+  catch-all 404 route rendered it on their home page. Found by
+  [signalxjs/pulse](https://github.com/signalxjs/pulse) on its first page
+  load. ([#58](https://github.com/signalxjs/router/issues/58))
+
 ### Changed
 
 - Navigation guards pass core's `asyncAdvice` option through `runWithContext`, so core 0.10's dev-only async-callback warning carries router-specific advice for async guards (resolve injectables at the top of the guard, before the first `await`) instead of naming an API guard authors never call. No-op against core 0.10.0; activates on the next core release carrying `RunWithContextOptions` (added in signalxjs/core#292 for signalxjs/core#276). ([#56](https://github.com/signalxjs/router/issues/56))

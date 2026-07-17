@@ -69,6 +69,14 @@ function parseSegments(path: string): ParsedSegment[] {
  * Higher score = more specific match
  */
 function calculateScore(segments: ParsedSegment[]): number {
+    // The root path '/' parses to ZERO segments — score it like a single
+    // literal segment, or any one-segment wildcard/param route ('/*rest',
+    // '/:id?') outranks it and swallows the URL '/' (#58). Exactness must
+    // win: a literal root is the most specific possible match for '/'.
+    if (segments.length === 0) {
+        return 4;
+    }
+
     let score = 0;
     
     for (const segment of segments) {
