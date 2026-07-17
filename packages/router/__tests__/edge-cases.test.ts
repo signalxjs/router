@@ -150,6 +150,50 @@ describe('Edge Cases', () => {
     });
   });
 
+  describe('Catch-all vs literal ranking (#58)', () => {
+    function createCatchAllRouter() {
+      return createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'root' },
+          { path: '/login', name: 'login' },
+          { path: '/*rest', name: 'not-found' },
+        ],
+      });
+    }
+
+    it('the literal root beats a wildcard catch-all for "/"', async () => {
+      const router = createCatchAllRouter();
+
+      await router.push('/');
+      expect(router.currentRoute.name).toBe('root');
+    });
+
+    it('the literal root beats an optional-param route for "/"', async () => {
+      const router = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/:section?', name: 'section' },
+          { path: '/', name: 'root' },
+        ],
+      });
+
+      await router.push('/');
+      expect(router.currentRoute.name).toBe('root');
+    });
+
+    it('the catch-all still matches everything else', async () => {
+      const router = createCatchAllRouter();
+
+      await router.push('/nope/deeper');
+      expect(router.currentRoute.name).toBe('not-found');
+      expect(router.currentRoute.params.rest).toBe('nope/deeper');
+
+      await router.push('/login');
+      expect(router.currentRoute.name).toBe('login');
+    });
+  });
+
   describe('Unknown named route', () => {
     function createSimpleRouter() {
       return createRouter({
