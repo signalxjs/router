@@ -23,6 +23,7 @@
 
 import { execSync } from 'child_process';
 import { mkdirSync, readFileSync, rmSync, writeFileSync, readdirSync } from 'fs';
+import { gunzipSync } from 'zlib';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { tmpdir } from 'os';
@@ -49,6 +50,29 @@ function readJson(path) {
     return JSON.parse(readFileSync(path, 'utf-8'));
 }
 
+// Extract a single file's text from a gzipped npm tarball using only Node
+// built-ins (no `tar`/`yaml` dep, cross-platform). npm/pnpm tarballs store
+// entries under `package/`; ustar headers are 512-byte blocks with the name in
+// bytes 0..100 and the octal size in bytes 124..136. Entry names here are short
+// (`package/package.json`), so no GNU/PAX long-name handling is needed.
+function readFileFromTarball(tarballPath, wantName) {
+    const buf = gunzipSync(readFileSync(tarballPath));
+    for (let offset = 0; offset + 512 <= buf.length; ) {
+        const name = buf.subarray(offset, offset + 100).toString('utf-8').replace(/\0.*$/s, '');
+        if (name === '') break; // end-of-archive zero blocks
+        const size = parseInt(
+            buf.subarray(offset + 124, offset + 136).toString('utf-8').replace(/\0.*$/s, '').trim(),
+            8
+        ) || 0;
+        offset += 512;
+        if (name === wantName) {
+            return buf.subarray(offset, offset + size).toString('utf-8');
+        }
+        offset += Math.ceil(size / 512) * 512;
+    }
+    throw new Error(`${wantName} not found in ${tarballPath}`);
+}
+
 function packPackage(pkgPath) {
     const pkgFullPath = join(rootDir, pkgPath);
     const pkgJson = readJson(join(pkgFullPath, 'package.json'));
@@ -59,7 +83,14 @@ function packPackage(pkgPath) {
     if (!match) {
         throw new Error(`Could not find tarball for ${pkgJson.name} in ${tarballDir}`);
     }
-    return { name: pkgJson.name, version: pkgJson.version, tarball: join(tarballDir, match) };
+    const tarball = join(tarballDir, match);
+    // Read the PUBLISHED manifest from inside the tarball, not the source
+    // package.json: `pnpm pack` rewrites workspace `catalog:` specifiers to
+    // their concrete ranges (e.g. `^0.12.0`), and that resolved form is what a
+    // consumer actually installs. Reading source would leak the literal
+    // `catalog:` protocol, which npm cannot resolve.
+    const publishedManifest = JSON.parse(readFileFromTarball(tarball, 'package/package.json'));
+    return { name: pkgJson.name, version: pkgJson.version, tarball, publishedManifest };
 }
 
 function main() {
@@ -80,8 +111,10 @@ function main() {
     const deps = Object.fromEntries(
         packed.map((p) => [p.name, `file:${p.tarball.replace(/\\/g, '/')}`])
     );
-    // @sigx/router declares `sigx` as a peer dep — satisfy it from npm.
-    deps['sigx'] = readJson(join(rootDir, 'packages/router/package.json')).peerDependencies.sigx;
+    // @sigx/router declares `sigx` as a peer dep — satisfy it from npm using the
+    // range from the PUBLISHED manifest (catalog: already rewritten to ^0.12.0).
+    const router = packed.find((p) => p.name === '@sigx/router');
+    deps['sigx'] = router.publishedManifest.peerDependencies.sigx;
     const appPkg = {
         name: 'sigx-router-pack-smoke',
         version: '0.0.0',
