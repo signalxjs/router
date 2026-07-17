@@ -60,11 +60,21 @@ function readFileFromTarball(tarballPath, wantName) {
     for (let offset = 0; offset + 512 <= buf.length; ) {
         const name = buf.subarray(offset, offset + 100).toString('utf-8').replace(/\0.*$/s, '');
         if (name === '') break; // end-of-archive zero blocks
-        const size = parseInt(
-            buf.subarray(offset + 124, offset + 136).toString('utf-8').replace(/\0.*$/s, '').trim(),
-            8
-        ) || 0;
+        // Octal size field (bytes 124..136). Fail fast on a malformed header
+        // rather than defaulting to 0 and silently desynchronizing the scan.
+        const rawSize = buf.subarray(offset + 124, offset + 136).toString('utf-8').replace(/\0.*$/s, '').trim();
+        const size = parseInt(rawSize, 8);
+        if (!Number.isSafeInteger(size) || size < 0) {
+            throw new Error(
+                `Malformed tar header for "${name}" in ${tarballPath}: unparseable size field ${JSON.stringify(rawSize)}`
+            );
+        }
         offset += 512;
+        if (offset + size > buf.length) {
+            throw new Error(
+                `Malformed tar entry "${name}" in ${tarballPath}: payload (${size} bytes) runs past end of archive`
+            );
+        }
         if (name === wantName) {
             return buf.subarray(offset, offset + size).toString('utf-8');
         }
