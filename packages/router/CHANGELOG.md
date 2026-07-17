@@ -12,8 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - The literal root route `'/'` now outranks wildcard catch-alls (`'/*rest'`)
   and optional-param routes for the URL `/` — it previously scored zero
   (no segments) and lost to any one-segment pattern, so apps with a
-  catch-all 404 route rendered it on their home page. (#58, found by
-  signalxjs/pulse)
+  catch-all 404 route rendered it on their home page. Found by
+  [signalxjs/pulse](https://github.com/signalxjs/pulse) on its first page
+  load. ([#58](https://github.com/signalxjs/router/issues/58))
 
 ### Changed
 
