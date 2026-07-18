@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- The literal root route `'/'` now outranks wildcard catch-alls (`'/*rest'`)
+  and optional-param routes for the URL `/` — it previously scored zero
+  (no segments) and lost to any one-segment pattern, so apps with a
+  catch-all 404 route rendered it on their home page. Found by
+  [signalxjs/pulse](https://github.com/signalxjs/pulse) on its first page
+  load. ([#58](https://github.com/signalxjs/router/issues/58))
+
 ### Changed
 
 - **Aligned with SignalX core 0.12.** The core peer ranges (`@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, `sigx`) move from `>=0.10.0 <0.11.0` to `^0.12.0` (== `>=0.12.0 <0.13.0`), and the router is rebuilt and validated against core `0.12.0`. Read the peer range, not the router version, to know which core a given router supports. ([#60](https://github.com/signalxjs/router/issues/60))
