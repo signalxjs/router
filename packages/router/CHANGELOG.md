@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- Fixed: `<Link>` no longer drops the `class` and `style` props. They were never declared on `LinkProps`, and the render hard-assigned `class` from the active-class list alone — so `<Link to="/" class="btn btn-ghost">` rendered as `<a class="router-link-active">`, silently unstyling every link in an app. Consumer classes now come first, with `router-link-active` / `router-link-exact-active` appended, and `style` passes through. ([#63](https://github.com/signalxjs/router/issues/63))
+
 ## [0.9.0] - 2026-07-18
 
 ### Fixed

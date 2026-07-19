@@ -15,9 +15,11 @@ import { component, type Define } from 'sigx';
 import { useRouter, useRoute } from './hooks.js';
 import type { RouteLocationRaw } from './types.js';
 
-type LinkProps = 
+type LinkProps =
     & Define.Prop<'to', RouteLocationRaw, true>
     & Define.Prop<'replace', boolean>
+    & Define.Prop<'class', string>
+    & Define.Prop<'style', string>
     & Define.Prop<'activeClass', string>
     & Define.Prop<'exactActiveClass', string>
     & Define.Prop<'ariaCurrentValue', 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>
@@ -74,20 +76,27 @@ export const Link = component<LinkProps>(({ props, slots, emit }) => {
         const isExactActive = currentRoute.path === resolved.path;
         const isActive = currentRoute.path.startsWith(resolved.path);
         
-        // Build class list
+        // Build class list — the caller's own classes come FIRST, then the
+        // state classes. A Link is styled by its consumer (`<Link to="/"
+        // class="btn btn-ghost">`); dropping `class` here would silently
+        // unstyle every link in an app.
         const classes: string[] = [];
+        if (props.class) {
+            classes.push(props.class);
+        }
         if (isActive && activeClass()) {
             classes.push(activeClass());
         }
         if (isExactActive && exactActiveClass()) {
             classes.push(exactActiveClass());
         }
-        
+
         return (
             <a
                 href={href}
                 onClick={handleClick}
                 class={classes.length > 0 ? classes.join(' ') : undefined}
+                style={props.style}
                 aria-current={isExactActive ? ariaCurrentValue() : undefined}
             >
                 {slots.default?.()}

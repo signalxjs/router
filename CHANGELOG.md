@@ -4,6 +4,7 @@ All notable changes to `@sigx/router`. The package also keeps a per-package `pac
 
 ## [Unreleased]
 
+- Fixed: `<Link>` no longer drops the `class` and `style` props. They were never declared on `LinkProps`, and the render hard-assigned `class` from the active-class list alone — so `<Link to="/" class="btn btn-ghost">` rendered as `<a class="router-link-active">`, silently unstyling every link in an app. Consumer classes now come first, with `router-link-active` / `router-link-exact-active` appended, and `style` passes through. ([#63](https://github.com/signalxjs/router/issues/63))
 - Navigation guards now pass core's `asyncAdvice` option through `runWithContext`, re-attributing core 0.10's dev-only async-callback warning: an async guard gets router-specific advice ("resolve injectables at the top of the guard, before awaiting") instead of remediation aimed at an API the guard author never called. No-op against core 0.10.0 (the extra argument is ignored — the generic core warning appears); activates on the next core release carrying `RunWithContextOptions` (added in signalxjs/core#292 for signalxjs/core#276). ([#56](https://github.com/signalxjs/router/issues/56))
 
 ## 0.8.0 — 2026-07-16
