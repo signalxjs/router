@@ -237,4 +237,61 @@ describe('Link component', () => {
 
         expect(pushSpy).not.toHaveBeenCalled();
     });
+
+    // ------------------------------------------------------------------
+    // class / style pass-through (#63). A Link is styled by its consumer;
+    // dropping `class` silently unstyles every link in an app.
+    // ------------------------------------------------------------------
+
+    async function mountLink(initialLocation: string, link: any) {
+        const router = createTestRouter(initialLocation);
+        const App = component(() => () => (
+            <div>
+                {link}
+                <RouterView />
+            </div>
+        ), { name: 'App' });
+        const app = defineApp(jsx(App, {}));
+        app.use(router);
+        app.mount(container);
+        await flushAsync();
+        return container.querySelector('a')!;
+    }
+
+    it('should keep the consumer class on an inactive link', async () => {
+        const anchor = await mountLink('/', <Link to="/about" class="btn btn-ghost">About</Link>);
+        expect(anchor.classList.contains('btn')).toBe(true);
+        expect(anchor.classList.contains('btn-ghost')).toBe(true);
+        expect(anchor.classList.contains('router-link-active')).toBe(false);
+    });
+
+    it('should merge the consumer class with the active classes', async () => {
+        const anchor = await mountLink('/about', <Link to="/about" class="btn btn-ghost">About</Link>);
+        expect(anchor.classList.contains('btn')).toBe(true);
+        expect(anchor.classList.contains('btn-ghost')).toBe(true);
+        expect(anchor.classList.contains('router-link-active')).toBe(true);
+        expect(anchor.classList.contains('router-link-exact-active')).toBe(true);
+        // Consumer classes lead, so a state class can override them.
+        expect(anchor.getAttribute('class')).toBe(
+            'btn btn-ghost router-link-active router-link-exact-active'
+        );
+    });
+
+    it('should merge the consumer class with a custom activeClass', async () => {
+        const anchor = await mountLink(
+            '/about',
+            <Link to="/about" class="nav-item" activeClass="on" exactActiveClass="on-exact">About</Link>
+        );
+        expect(anchor.getAttribute('class')).toBe('nav-item on on-exact');
+    });
+
+    it('should pass style through', async () => {
+        const anchor = await mountLink('/', <Link to="/about" style="color: red">About</Link>);
+        expect(anchor.style.color).toBe('red');
+    });
+
+    it('should emit no class attribute when there is neither a consumer nor a state class', async () => {
+        const anchor = await mountLink('/', <Link to="/about">About</Link>);
+        expect(anchor.hasAttribute('class')).toBe(false);
+    });
 });
