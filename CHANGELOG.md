@@ -4,8 +4,16 @@ All notable changes to `@sigx/router`. The package also keeps a per-package `pac
 
 ## [Unreleased]
 
+## 0.10.0 — 2026-07-23
+
+- **Aligned with SignalX core 0.13.** Core peer ranges (`@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, `sigx`) move from `^0.12.0` to `^0.13.0`, sourced from the `catalog:` block in `pnpm-workspace.yaml` (rewritten to the concrete `^0.13.0` range on `pnpm pack`/`publish`), and the router is rebuilt and validated against core `0.13.0`. Retargeting the single-minor core range is a **breaking packaging change** — hence the minor bump. **No public API change**: the 0.12→0.13 window is additive for the router's core surface. ([#73](https://github.com/signalxjs/router/pull/73))
 - Fixed: `<Link>` no longer drops the `class` and `style` props. They were never declared on `LinkProps`, and the render hard-assigned `class` from the active-class list alone — so `<Link to="/" class="btn btn-ghost">` rendered as `<a class="router-link-active">`, silently unstyling every link in an app. Consumer classes now come first, with `router-link-active` / `router-link-exact-active` appended, and `style` passes through. ([#63](https://github.com/signalxjs/router/issues/63))
-- Navigation guards now pass core's `asyncAdvice` option through `runWithContext`, re-attributing core 0.10's dev-only async-callback warning: an async guard gets router-specific advice ("resolve injectables at the top of the guard, before awaiting") instead of remediation aimed at an API the guard author never called. No-op against core 0.10.0 (the extra argument is ignored — the generic core warning appears); activates on the next core release carrying `RunWithContextOptions` (added in signalxjs/core#292 for signalxjs/core#276). ([#56](https://github.com/signalxjs/router/issues/56))
+
+## 0.9.0 — 2026-07-18
+
+- Aligned with SignalX core 0.12: core peer ranges moved from `>=0.10.0 <0.11.0` to `^0.12.0`, rebuilt and validated against core `0.12.0`. Core version is now a pnpm catalog (`catalog:` block in `pnpm-workspace.yaml`, rewritten to a concrete range on publish). No public API change. ([#60](https://github.com/signalxjs/router/issues/60))
+- Fixed: the literal root route `'/'` now outranks wildcard catch-alls (`'/*rest'`) and optional-param routes for the URL `/`, so apps with a catch-all 404 route no longer render it on their home page. ([#58](https://github.com/signalxjs/router/issues/58))
+- Navigation guards now pass core's `asyncAdvice` option through `runWithContext`, re-attributing core's dev-only async-callback warning: an async guard gets router-specific advice ("resolve injectables at the top of the guard, before awaiting") instead of remediation aimed at an API the guard author never called. Wired as a no-op against core 0.10; now live with the move to core 0.12, which carries `RunWithContextOptions` (added in signalxjs/core#292 for signalxjs/core#276). ([#56](https://github.com/signalxjs/router/issues/56))
 
 ## 0.8.0 — 2026-07-16
 

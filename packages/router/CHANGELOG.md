@@ -7,7 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-- Fixed: `<Link>` no longer drops the `class` and `style` props. They were never declared on `LinkProps`, and the render hard-assigned `class` from the active-class list alone — so `<Link to="/" class="btn btn-ghost">` rendered as `<a class="router-link-active">`, silently unstyling every link in an app. Consumer classes now come first, with `router-link-active` / `router-link-exact-active` appended, and `style` passes through. ([#63](https://github.com/signalxjs/router/issues/63))
+## [0.10.0] - 2026-07-23
+
+### Changed
+
+- **Aligned with SignalX core 0.13.** The core peer ranges (`@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, `sigx`) move from `^0.12.0` to `^0.13.0` (== `>=0.13.0 <0.14.0`), and the router is rebuilt and validated against core `0.13.0`. The single source of truth is the `catalog:` block in `pnpm-workspace.yaml`; `pnpm pack`/`publish` rewrites `"catalog:"` to the concrete `^0.13.0` range in the published manifest, so consumers see a normal semver range. Retargeting the single-minor core range is a **breaking packaging change** — hence the minor bump. Read the peer range, not the router version, to know which core a given router supports. ([#73](https://github.com/signalxjs/router/pull/73))
+  - **No public API change.** The 0.12→0.13 window is additive for the router's core surface (`signal`, `component`, `defineInjectable`, `defineProvide`, `getCurrentInstance`, `runWithContext`, and the `App` / `Define` / `ComponentFactory` / `Plugin` types via the `sigx` barrel). Core 0.13's changes (the `@sigx/server` data-keyed boundary refresh, additional server packs) touch no surface the router imports.
+
+### Fixed
+
+- `<Link>` no longer drops the `class` and `style` props. They were never declared on `LinkProps`, and the render hard-assigned `class` from the active-class list alone — so `<Link to="/" class="btn btn-ghost">` rendered as `<a class="router-link-active">`, silently unstyling every link in an app. Consumer classes now come first, with `router-link-active` / `router-link-exact-active` appended, and `style` passes through. ([#63](https://github.com/signalxjs/router/issues/63))
 
 ## [0.9.0] - 2026-07-18
 
