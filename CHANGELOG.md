@@ -4,6 +4,11 @@ All notable changes to `@sigx/router`. The package also keeps a per-package `pac
 
 ## [Unreleased]
 
+## 0.11.0 — 2026-07-29
+
+- **Aligned with SignalX core 0.14.** Core peer ranges (`@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, `sigx`) move from `^0.13.0` to `^0.14.0`, sourced from the `catalog:` block in `pnpm-workspace.yaml` (rewritten to the concrete `^0.14.0` range on `pnpm pack`/`publish`), and the router is rebuilt and validated against core `0.14.0`. Retargeting the single-minor core range is a **breaking packaging change** — hence the minor bump. **No public API change**: the 0.13→0.14 window is additive for the router's core surface, and `build`, `typecheck` and `test` (16 files, 205 tests) passed on the first run. ([#77](https://github.com/signalxjs/router/pull/77))
+- Changed (internal): the `size-limit` budget now measures the router's **own** code. `.size-limit.json` carried no `ignore` list — the only one in the sigx ecosystem without one — so its 16 KB ceiling covered `@sigx/router` *plus every core package bundled with it*: 4.54 kB of router and roughly 11.6 kB of core. Core 0.14's new `ownKeys`/`has` proxy traps pushed the combined figure to 16.12 kB and failed the check on a PR that changed no router source at all. Core is now ignored, matching `@sigx/store`, `@sigx/use` and `@sigx/monaco-editor`, and the ceiling is re-set to 6 KB against the 4.54 kB actual. A budget that tracked core's growth could never say whether the *router* grew, and would have needed raising on every future core minor. ([#77](https://github.com/signalxjs/router/pull/77))
+
 ## 0.10.0 — 2026-07-23
 
 - **Aligned with SignalX core 0.13.** Core peer ranges (`@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, `sigx`) move from `^0.12.0` to `^0.13.0`, sourced from the `catalog:` block in `pnpm-workspace.yaml` (rewritten to the concrete `^0.13.0` range on `pnpm pack`/`publish`), and the router is rebuilt and validated against core `0.13.0`. Retargeting the single-minor core range is a **breaking packaging change** — hence the minor bump. **No public API change**: the 0.12→0.13 window is additive for the router's core surface. ([#73](https://github.com/signalxjs/router/pull/73))
