@@ -2,6 +2,7 @@
   {
     "name": "@sigx/router",
     "path": "packages/router/dist/index.js",
-    "limit": "16 KB"
+    "ignore": ["@sigx/reactivity", "@sigx/runtime-core", "@sigx/runtime-dom", "sigx"],
+    "limit": "6 KB"
   }
 ]
