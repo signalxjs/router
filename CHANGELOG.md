@@ -4,6 +4,10 @@ All notable changes to `@sigx/router`. The package also keeps a per-package `pac
 
 ## [Unreleased]
 
+## 0.12.1 — 2026-08-04
+
+- **Revalidated against SignalX core 0.15.1.** Core shipped the `0.15.1` patch after `v0.12.0` was released against core `0.15.0`. No router source change and no dependency-range change — the published peer/dev ranges stay `^0.15.0`, which already covers `0.15.1`; the workspace lockfile now resolves core `0.15.1`, and `verify:catalog`, `build`, `typecheck` and `test` (16 files, 205 tests) passed on the first run against it. Part of the core 0.15.1 ecosystem rollout (tier 1). ([#83](https://github.com/signalxjs/router/pull/83))
+
 ## 0.12.0 — 2026-08-04
 
 - **Aligned with SignalX core 0.15.** Core peer ranges (`@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, `sigx`) move from `^0.14.0` to `^0.15.0`, sourced from the `catalog:` block in `pnpm-workspace.yaml` (rewritten to the concrete `^0.15.0` range on `pnpm pack`/`publish`), and the router is rebuilt and validated against core `0.15.0`. Retargeting the single-minor core range is a **breaking packaging change** — hence the minor bump. **No public API change**: the 0.14→0.15 window (the rfc-server-v4 guard split — `createServerApp`, `requireAuthorization`, server README/migration docs) touches no surface the router imports, and `verify:catalog`, `build`, `typecheck` and `test` (16 files, 205 tests) passed on the first run. ([#80](https://github.com/signalxjs/router/pull/80))
