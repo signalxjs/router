@@ -7,20 +7,20 @@ settings:
 catalogs:
   default:
     '@sigx/reactivity':
-      specifier: ^0.15.0
-      version: 0.15.1
+      specifier: ^0.15.2
+      version: 0.15.3
     '@sigx/runtime-core':
-      specifier: ^0.15.0
-      version: 0.15.1
+      specifier: ^0.15.2
+      version: 0.15.3
     '@sigx/runtime-dom':
-      specifier: ^0.15.0
-      version: 0.15.1
+      specifier: ^0.15.2
+      version: 0.15.3
     '@sigx/vite':
-      specifier: ^0.15.0
-      version: 0.15.1
+      specifier: ^0.15.2
+      version: 0.15.3
     sigx:
-      specifier: ^0.15.0
-      version: 0.15.1
+      specifier: ^0.15.2
+      version: 0.15.3
 
 importers:
 
@@ -58,22 +58,22 @@ importers:
     devDependencies:
       '@sigx/reactivity':
         specifier: 'catalog:'
-        version: 0.15.1
+        version: 0.15.3
       '@sigx/runtime-core':
         specifier: 'catalog:'
-        version: 0.15.1
+        version: 0.15.3
       '@sigx/runtime-dom':
         specifier: 'catalog:'
-        version: 0.15.1
+        version: 0.15.3
       '@sigx/vite':
         specifier: 'catalog:'
-        version: 0.15.1(sigx@0.15.1)(vite@8.0.11(@types/node@20.19.40)(jiti@2.7.0))
+        version: 0.15.3(sigx@0.15.3)(vite@8.0.11(@types/node@20.19.40)(jiti@2.7.0))
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.40
       sigx:
         specifier: 'catalog:'
-        version: 0.15.1
+        version: 0.15.3
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -508,23 +508,23 @@ packages:
   '@rolldown/pluginutils@1.0.0-rc.18':
     resolution: {integrity: sha512-CUY5Mnhe64xQBGZEEXQ5WyZwsc1JU3vAZLIxtrsBt3LO6UOb+C8GunVKqe9sT8NeWb4lqSaoJtp2xo6GxT1MNw==}
 
-  '@sigx/reactivity@0.15.1':
-    resolution: {integrity: sha512-zZSsykEt5cKuIIst7nhIDyU22cCNMvdEdFdtyiKPzBpmLtfzG2T4jy7Wty3mgk/diFUGNBC3NLVrdUvnJyV7LQ==}
+  '@sigx/reactivity@0.15.3':
+    resolution: {integrity: sha512-OHCkOe+ALpbTMeEoBVlR0LkXDotlydtfck+qYt21bNGqsQBmnUrQsHpHI4l+zRx7UOxcm73f4JMXm4DIzLqQIQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
 
-  '@sigx/runtime-core@0.15.1':
-    resolution: {integrity: sha512-1P4K9AnlB9zeZy/sBlkI10ayKolKow9qM0f8Q7oVwmfZPkCcIBsJsnW6JGNmAxtyXhu+5GdwQ4wY+CAlGyA3Sg==}
+  '@sigx/runtime-core@0.15.3':
+    resolution: {integrity: sha512-hkkiag2cwwvfSKwNTu0Kvf9paL9jQPlDR20vzJbCrmDOUUPB+N6I41Vj87jSIXXNXWsTnypeVWQ584AxR5ybhw==}
     engines: {node: ^20.19.0 || >=22.12.0}
 
-  '@sigx/runtime-dom@0.15.1':
-    resolution: {integrity: sha512-pON3QC0EOAHwUZIDwtbWTPca2Q9HqV+ljYRKEk3GBiSeAeyWwF9aegnqIiLJe8CqfN4hH9v5qqCADAthc2dlfg==}
+  '@sigx/runtime-dom@0.15.3':
+    resolution: {integrity: sha512-Y+XFhZhQfeex8W+kCrKdeLuFX/uxPRDhHG9+toCQO2QFr7QtH7tnp0a1l9po639YZDKBlzvmb0vB8OuGu81DfA==}
     engines: {node: ^20.19.0 || >=22.12.0}
 
-  '@sigx/serialize@0.15.1':
-    resolution: {integrity: sha512-a2CGZKChrtdVi+5YA1tZ8Ut5Ge0UpblxDgm03mxDYw1OYu5psl5+JHg36icOZaC8f+fV65/awpwPIIla4XCsqw==}
+  '@sigx/serialize@0.15.3':
+    resolution: {integrity: sha512-93KwiHu7i/Y7VFkGpmOnMZV68ordBiIqX7xi62V7RywKFWjMeTeY8QSy+TMtcuMnSlJTLMuk6JS8ml4QC353iQ==}
 
-  '@sigx/vite@0.15.1':
-    resolution: {integrity: sha512-2BygjYyDi43hIhtuHNCndUwKqdjBwckmBbuzVHjT2euA7BqdRd8ISx/aEQcReU2KUWjfXmAGl7qSAcFbL1VGSQ==}
+  '@sigx/vite@0.15.3':
+    resolution: {integrity: sha512-XS9ezFb5BZEyJH+aFOl6xFXUUwKGZVKCCzIcywb4wRGvg+hC+mFHFSVD1nA0bEUxbQxeHNYJIpwsLvev4Xme7w==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -910,8 +910,8 @@ packages:
   siginfo@2.0.0:
     resolution: {integrity: sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==}
 
-  sigx@0.15.1:
-    resolution: {integrity: sha512-BOjSH6t5mKnRRjNQ+cXtR1Qyr+FiJuAI1vko2tvUIcHLrfp8I4uOOzrqCcaPjzC6+T/sfcSK204qFEoca6OqdQ==}
+  sigx@0.15.3:
+    resolution: {integrity: sha512-ZmIvK5gR97WsfwXiCdhkQBjSvrPPdlqp2iWHROckQsdwyGUL13uwm+M3YGLA/O05HN1vulxikfxpB1exmtUg9A==}
     engines: {node: ^20.19.0 || >=22.12.0}
 
   size-limit@11.2.0:
@@ -1301,23 +1301,23 @@ snapshots:
 
   '@rolldown/pluginutils@1.0.0-rc.18': {}
 
-  '@sigx/reactivity@0.15.1': {}
+  '@sigx/reactivity@0.15.3': {}
 
-  '@sigx/runtime-core@0.15.1':
+  '@sigx/runtime-core@0.15.3':
     dependencies:
-      '@sigx/reactivity': 0.15.1
-      '@sigx/serialize': 0.15.1
+      '@sigx/reactivity': 0.15.3
+      '@sigx/serialize': 0.15.3
 
-  '@sigx/runtime-dom@0.15.1':
+  '@sigx/runtime-dom@0.15.3':
     dependencies:
-      '@sigx/reactivity': 0.15.1
-      '@sigx/runtime-core': 0.15.1
+      '@sigx/reactivity': 0.15.3
+      '@sigx/runtime-core': 0.15.3
 
-  '@sigx/serialize@0.15.1': {}
+  '@sigx/serialize@0.15.3': {}
 
-  '@sigx/vite@0.15.1(sigx@0.15.1)(vite@8.0.11(@types/node@20.19.40)(jiti@2.7.0))':
+  '@sigx/vite@0.15.3(sigx@0.15.3)(vite@8.0.11(@types/node@20.19.40)(jiti@2.7.0))':
     dependencies:
-      sigx: 0.15.1
+      sigx: 0.15.3
       vite: 8.0.11(@types/node@20.19.40)(jiti@2.7.0)
 
   '@size-limit/esbuild@11.2.0(size-limit@11.2.0)':
@@ -1693,11 +1693,11 @@ snapshots:
 
   siginfo@2.0.0: {}
 
-  sigx@0.15.1:
+  sigx@0.15.3:
     dependencies:
-      '@sigx/reactivity': 0.15.1
-      '@sigx/runtime-core': 0.15.1
-      '@sigx/runtime-dom': 0.15.1
+      '@sigx/reactivity': 0.15.3
+      '@sigx/runtime-core': 0.15.3
+      '@sigx/runtime-dom': 0.15.3
 
   size-limit@11.2.0:
     dependencies:
