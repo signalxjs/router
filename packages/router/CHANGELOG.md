@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-09-18
+
+### Changed
+
+- **Aligned with SignalX core 1.0.** The core peer ranges (`@sigx/reactivity`, `@sigx/runtime-core`, `@sigx/runtime-dom`, `sigx`) move from `^0.15.0` to `^1.0.0` (== `>=1.0.0 <2.0.0`), and the router is rebuilt and validated against core `1.0.0`. The single source of truth is still the `catalog:` block in `pnpm-workspace.yaml`; `pnpm pack`/`publish` rewrites `"catalog:"` to the concrete `^1.0.0` range in the published manifest. Retargeting the core range is a **breaking packaging change** — hence the minor bump. Unlike the 0.x line, the published range now spans the whole 1.x major rather than a single minor: core 1.0 is the stability contract (breaking changes only at a major; core `docs/rfc-1.0.md`), so a library peers wide and the app owns the single copy of core. ([#86](https://github.com/signalxjs/router/pull/86), [#87](https://github.com/signalxjs/router/issues/87))
+  - **No public API change.** The 0.15→1.0 window (the rfc-server-v5 server-function consolidation and the other 1.0 removals) touches no surface the router imports, and `verify:catalog`, `build`, `typecheck` and `test` (16 files, 205 tests) passed on the first run against core `1.0.0`.
+  - Releases 0.11.0, 0.12.0 and 0.12.1 (core 0.14 / 0.15 / 0.15.1 alignments, plus the `size-limit` budget fix) were recorded in the root `CHANGELOG.md` only; see there for those entries.
+
 ## [0.10.0] - 2026-07-23
 
 ### Changed
